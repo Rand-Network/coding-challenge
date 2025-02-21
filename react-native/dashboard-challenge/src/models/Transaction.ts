@@ -16,11 +16,20 @@ export function parseTransaction(transaction: any): TTransaction {
         return {
             createdAt: transaction.createdAt,
             name: transaction.name,
-            amount: Number(transaction.amount) * 100,
+            amount: Math.round(parseFloat(transaction.amount) * 100),
             isExpense: Boolean(transaction.isExpense),
             id: transaction.id
         }
     } catch (error) {
         throw new Error('Invalid transaction object.')
     }
+}
+
+export function formatTransaction(transaction: TTransaction): string {
+    const amount = transaction.isExpense ? -transaction.amount : transaction.amount
+    
+    return new Intl.NumberFormat('es-ES', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(amount / 100) + "€"
 }
