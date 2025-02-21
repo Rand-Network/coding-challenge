@@ -2,23 +2,23 @@ import { useMemo } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { StyleSheet, Text, View } from "react-native"
 
-export default function Balance() {
-    const { getBalance } = useAppStore() // Load products from Zustand
+export default function Balance () {
+    const { transactions, getBalance } = useAppStore() // Load products from Zustand
 
     const formatBalance = useMemo(
-        () => 
+        () =>
             new Intl.NumberFormat('es-ES', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
             }).format(getBalance() / 100) + "€"
         ,
-        [getBalance()]
+        [transactions]
     )
 
     return (
         <View style={Styles.row}>
             <Text style={Styles.cell}>Balance</Text>
-            <Text style={[Styles.cell, { textAlign: "right" }]}>{ formatBalance }</Text>
+            <Text style={[Styles.cell, { textAlign: "right" }]}>{formatBalance}</Text>
         </View>
     )
 }
