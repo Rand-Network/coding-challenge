@@ -5,5 +5,5 @@ const endpoint = '/products'
 export async function getProducts () {
 
   const products = await ApiRequester.get(endpoint)
-  return products
+  return products.data
 }
