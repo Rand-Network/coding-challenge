@@ -25,6 +25,11 @@ export function parseTransaction (transaction: any): TTransaction {
   }
 }
 
+/**
+ * From a Transaction return the price formatted eg. -1.234,56€
+ * @param transaction TTransaction - A transaction
+ * @returns string - Price formatted
+ */
 export function formatPrices (transaction: TTransaction): string {
   const amount = transaction.isExpense ? -transaction.amount : transaction.amount
 
@@ -32,4 +37,18 @@ export function formatPrices (transaction: TTransaction): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount / 100) + "€"
+}
+
+/**
+ * Sort an array of transactions by createdAt, newer first
+ * @param transactions TTransactions Array
+ * @returns TTransaction Array - sorted array
+ */
+export function sortTransactions (transactions: TTransaction[]): TTransaction[] {
+  try {
+    return transactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  } catch (err) {
+    console.error(err)
+    return []
+  }
 }

@@ -1,17 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { parseTransaction, TTransaction } from '../models/Transaction'
+import { parseTransaction, sortTransactions, TTransaction } from '../models/Transaction'
 import { parseProduct, TProduct } from '../models/Product'
 
-
 interface AppState {
-  totalBalance: number
   products: TProduct[]
   transactions: TTransaction[]
   setProducts: ({ products }: { products: TProduct[] }) => void
+  getBalance (): number,
   setTransactions: ({ transactions }: { transactions: TTransaction[] }) => void
-  getBalance (): number
 }
 
 export const useAppStore = create<AppState>()(
@@ -27,7 +25,7 @@ export const useAppStore = create<AppState>()(
         }),
       setTransactions: ({ transactions }) =>
         set(() => {
-          const parsedTransactions = transactions.map(parseTransaction)
+          const parsedTransactions = sortTransactions(transactions.map(parseTransaction))
           return { transactions: parsedTransactions }
         }),
       /**
