@@ -13,7 +13,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Balance from '@/src/components/balance'
 import TransactioList from '@/src/components/transaction-list'
 
-export default function Home() {
+export default function Home () {
 
   const { setTransactions, setProducts } = useAppStore()
 

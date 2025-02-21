@@ -5,7 +5,7 @@ import { useAppStore } from '../hooks/useAppStore'
 
 const { width } = Dimensions.get('window')
 
-export default function ProductCarousel() {
+export default function ProductCarousel () {
   const { products } = useAppStore() // Load products from Zustand
   const [activeIndex, setActiveIndex] = useState(0)
 

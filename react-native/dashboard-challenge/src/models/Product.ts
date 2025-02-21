@@ -8,7 +8,7 @@ export interface TProduct {
  * @param Product API Product
  * @returns TProduct
  */
-export function parseProduct(product: any): TProduct {
+export function parseProduct (product: any): TProduct {
     try {
         return {
             image: product.image,
