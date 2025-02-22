@@ -1,45 +1,46 @@
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useQuery } from '@tanstack/react-query'
-import { getTransactions } from '@/src/api/TransactionApi'
 import { useEffect } from 'react'
 import { useAppStore } from '@/src/hooks/useAppStore'
 import { TTransaction } from '@/src/models/Transaction'
-import { TProduct } from '@/src/models/Product'
-import { getProducts } from '@/src/api/ProductApi'
 import ProductCarousel from '@/src/components/carousel'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Balance from '@/src/components/balance'
 import TransactioList from '@/src/components/transaction-list'
 import { colors, spacing } from '@/src/styles/theme'
+import { useTransactions } from '@/src/hooks/useTransactions'
+import { useProducts } from '@/src/hooks/useProducts'
+import { TProduct } from '@/src/models/Product'
 
 export default function Home () {
 
+  const { data: productsData, isError: productsIsError, dataUpdatedAt: productsDataUpdatedAt } = useProducts()
+  const { data: transactionsData, isError: transactionsIsError } = useTransactions()
   const { setTransactions, setProducts } = useAppStore()
-
-  // Query transactions
-  const queryTransactions = useQuery({
-    queryKey: ['transactions'],
-    queryFn: getTransactions,
-  })
-
-  const queryProducts = useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
-  })
 
   // Store data after fetching
   useEffect(() => {
-    if (queryTransactions.data) {
-      setTransactions({ transactions: queryTransactions.data as unknown as TTransaction[] })
+    if (productsIsError) {
+      console.log('Products error')
+      setProducts({ products: [] })
+      return
     }
-  }, [queryTransactions.data])
+    if (productsData?.data && Array.isArray(productsData.data)) {
+      console.log('updateProducts')
+      setProducts({ products: productsData.data as unknown as TProduct[] })
+    }
+  }, [productsDataUpdatedAt, productsIsError])
 
   useEffect(() => {
-    if (queryProducts.data) {
-      setProducts({ products: queryProducts.data as unknown as TProduct[] })
+    if (transactionsIsError) {
+      setTransactions({ transactions: [] })
+      return
     }
-  }, [queryProducts.data])
+    if (transactionsData?.data && Array.isArray(transactionsData.data)) {
+      console.log('Update trans')
+      setTransactions({ transactions: transactionsData.data as unknown as TTransaction[] })
+    }
+  }, [transactionsData, transactionsIsError])
 
   return (
     <SafeAreaView style={styles.container}>

@@ -4,5 +4,5 @@ const endpoint = '/transactions'
 
 export async function getTransactions () {
   const transactions = await ApiRequester.get(endpoint)
-  return transactions.data
+  return transactions
 }

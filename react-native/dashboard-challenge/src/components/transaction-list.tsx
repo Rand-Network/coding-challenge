@@ -6,7 +6,6 @@ import { colors, spacing } from "../styles/theme"
 import { router } from "expo-router"
 
 export default function TransactioList () {
-
   const { transactions } = useAppStore()
   const [seeAll, setSeeAll] = useState(false)
 

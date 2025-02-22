@@ -7,7 +7,7 @@ import { colors, spacing } from '@/src/styles/theme'
 const { width } = Dimensions.get('window')
 
 export default function ProductCarousel () {
-  const { products } = useAppStore() // Load products from Zustand
+  const { products } = useAppStore()
   const [activeIndex, setActiveIndex] = useState(0)
 
   const renderItem = ({ item }: { item: { image: string } }) => (
