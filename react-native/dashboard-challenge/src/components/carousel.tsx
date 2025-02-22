@@ -3,11 +3,28 @@ import { View, Image, Dimensions, StyleSheet } from 'react-native'
 import Carousel from 'react-native-reanimated-carousel'
 import { useAppStore } from '../hooks/useAppStore'
 import { colors, spacing } from '@/src/styles/theme'
+import ContentLoader, { Rect } from "react-content-loader/native"
+import { useProducts } from '../hooks/useProducts'
 
 const { width } = Dimensions.get('window')
+const height = 200
+
+const Loader = () => (
+  <ContentLoader
+    animate={true}
+    width={width}
+    height={height}
+    viewBox={`0 0 ${width} ${height}`}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <Rect x="0" y="0" rx="0" ry="0" width={width} height={height} />
+  </ContentLoader>
+)
 
 export default function ProductCarousel () {
   const { products } = useAppStore()
+  const { isFetching } = useProducts()
   const [activeIndex, setActiveIndex] = useState(0)
 
   const renderItem = ({ item }: { item: { image: string } }) => (
@@ -19,13 +36,17 @@ export default function ProductCarousel () {
     </View>
   )
 
+  if (isFetching) {
+    return <Loader />
+  }
+
   return (
     <View>
       <Carousel
         data={products}
         renderItem={renderItem}
         width={width}
-        height={200}
+        height={height}
         onProgressChange={(index) => setActiveIndex(index)} // Tracks the active index
       />
       <View style={styles.pagination}>
@@ -41,7 +62,7 @@ export default function ProductCarousel () {
 
 export const styles = StyleSheet.create({
   container: {
-    height: 200,
+    height: height,
   },
   image: {
     width: width,
