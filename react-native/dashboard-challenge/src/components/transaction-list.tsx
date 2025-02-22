@@ -1,24 +1,15 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useState } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { formatPrices, TTransaction } from "../models/Transaction"
-import { FlatList, RefreshControl, RefreshControlComponent, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 import { colors, spacing } from "../styles/theme"
 import { router } from "expo-router"
-import { useProducts } from "../hooks/useProducts"
-import { useTransactions } from "../hooks/useTransactions"
 
 export default function TransactioList () {
   const { transactions } = useAppStore()
   const [seeAll, setSeeAll] = useState(false)
-  const { refetch: refetchProducts } = useProducts()
-  const { refetch: refetchTransactions } = useTransactions()
 
-  const [refreshing, setRefreshing] = useState(false)
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    Promise.all([refetchProducts(), refetchTransactions()])
-      .then(() => setRefreshing(false))
-  }, [])
+  const displayedTransactions = seeAll ? transactions : transactions.slice(0, 3)
 
   function navigate ({ id }: { id: TTransaction['id'] }) {
     router.push({
@@ -58,13 +49,9 @@ export default function TransactioList () {
           {seeAll ? 'See less' : 'See all'}
         </Text>
       </View>
-      <FlatList
-        data={seeAll ? transactions : transactions.slice(0, 3)}
-        renderItem={({ item }) => <ItemRow item={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={true}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      />
+      {displayedTransactions.map(item => (
+        <ItemRow key={item.id.toString()} item={item} />
+      ))}
     </View>
   )
 }
@@ -82,8 +69,6 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3,
-    maxHeight: '55%',
   },
   header: {
     flexDirection: 'row',

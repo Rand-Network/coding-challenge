@@ -1,10 +1,10 @@
-import { StyleSheet, View } from 'react-native'
+import { RefreshControl, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppStore } from '@/src/hooks/useAppStore'
 import { TTransaction } from '@/src/models/Transaction'
 import ProductCarousel from '@/src/components/carousel'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 import Balance from '@/src/components/balance'
 import TransactioList from '@/src/components/transaction-list'
 import { colors, spacing } from '@/src/styles/theme'
@@ -14,9 +14,16 @@ import { TProduct } from '@/src/models/Product'
 
 export default function Home () {
 
-  const { data: productsData, isError: productsIsError, dataUpdatedAt: productsDataUpdatedAt } = useProducts()
-  const { data: transactionsData, isError: transactionsIsError } = useTransactions()
+  const { data: productsData, isError: productsIsError, dataUpdatedAt: productsDataUpdatedAt, refetch: refetchProducts } = useProducts()
+  const { data: transactionsData, isError: transactionsIsError, refetch: refetchTransactions } = useTransactions()
   const { setTransactions, setProducts } = useAppStore()
+
+  const [refreshing, setRefreshing] = useState(false)
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    Promise.all([refetchProducts(), refetchTransactions()])
+      .then(() => setRefreshing(false))
+  }, [])
 
   // Store data after fetching
   useEffect(() => {
@@ -45,11 +52,12 @@ export default function Home () {
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.container}>
-        <View>
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <ProductCarousel />
           <Balance />
           <TransactioList />
-        </View>
+        </ScrollView>
       </GestureHandlerRootView>
     </SafeAreaView>
   )
