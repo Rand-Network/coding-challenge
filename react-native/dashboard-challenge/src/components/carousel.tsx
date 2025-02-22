@@ -12,23 +12,27 @@ export default function ProductCarousel () {
 
   const renderItem = ({ item }: { item: { image: string } }) => (
     <View style={styles.container}>
-      <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
+      <Image
+        resizeMethod='scale'
+        source={{ uri: item.image }}
+        style={styles.image} resizeMode="cover" />
     </View>
   )
 
   return (
-    <View style={styles.wrapper}>
+    <View>
       <Carousel
         data={products}
         renderItem={renderItem}
-        width={width - (spacing.sm * 2)} // Match container width
+        width={width}
         height={200}
-        onProgressChange={(_, index) => setActiveIndex(index)} // Tracks the active index
-        loop={false} // Disables infinite loop
+        onProgressChange={(index) => setActiveIndex(index)} // Tracks the active index
       />
       <View style={styles.pagination}>
         {products.map((_, index) => (
-          <View key={index} style={[styles.dot, activeIndex === index && styles.activeDot]} />
+          <View
+            key={index}
+            style={[styles.dot, activeIndex === index && styles.activeDot]} />
         ))}
       </View>
     </View>
@@ -36,10 +40,6 @@ export default function ProductCarousel () {
 }
 
 export const styles = StyleSheet.create({
-  wrapper: {
-    marginHorizontal: -spacing.sm, // Compensate for parent padding
-    marginBottom: spacing.md
-  },
   container: {
     height: 200,
   },
