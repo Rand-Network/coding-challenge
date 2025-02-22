@@ -9,6 +9,7 @@ interface AppState {
   transactions: TTransaction[]
   setProducts: ({ products }: { products: TProduct[] }) => void
   getBalance (): number,
+  getTransactionById: ({ id }: { id: TTransaction['id'] }) => TTransaction | undefined
   setTransactions: ({ transactions }: { transactions: TTransaction[] }) => void
 }
 
@@ -18,6 +19,9 @@ export const useAppStore = create<AppState>()(
       totalBalance: 0,
       products: [],
       transactions: [],
+      getTransactionById ({ id }) {
+        return get().transactions.find((trans) => trans.id === id)
+      },
       setProducts: ({ products }) =>
         set(() => {
           const parsedProducts = products.map(parseProduct)

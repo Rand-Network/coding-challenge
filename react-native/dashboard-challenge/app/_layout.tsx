@@ -10,8 +10,8 @@ export default function Layout () {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
-          name="modal"
-          options={{ presentation: 'modal' }}
+          name="transaction-detail"
+          options={{ presentation: 'modal', title: 'Detail' }}
         />
       </Stack>
     </QueryClientProvider>

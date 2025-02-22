@@ -1,21 +1,38 @@
-import { memo } from "react"
+import { memo, useState } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { formatPrices, TTransaction } from "../models/Transaction"
 import { FlatList, StyleSheet, Text, View } from "react-native"
 import { colors, spacing } from "../styles/theme"
+import { router } from "expo-router"
 
 export default function TransactioList () {
 
   const { transactions } = useAppStore()
+  const [seeAll, setSeeAll] = useState(false)
+
+  function navigate ({ id }: { id: TTransaction['id'] }) {
+    router.push({
+      pathname: '/transaction-detail',
+      params: {
+        transactionId: id.toString()
+      }
+    })
+  }
 
   const ItemRow = memo(function ItemRow ({ item }: { item: TTransaction }) {
     return (
       <View style={styles.item}>
-        <Text style={styles.transactionName}>{item.name}</Text>
-        <Text style={[
-          styles.amount,
-          item.isExpense ? styles.negative : styles.positive
-        ]}>
+        <Text
+          style={styles.transactionName}
+          onPress={() => navigate({ id: item.id })}>
+          {item.name}
+        </Text>
+        <Text
+          style={[
+            styles.amount,
+            item.isExpense ? styles.negative : styles.positive
+          ]}
+          onPress={() => navigate({ id: item.id })}>
           {formatPrices(item)}</Text>
       </View>
     )
@@ -25,12 +42,17 @@ export default function TransactioList () {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Recent transactions</Text>
-        <Text style={styles.seeAll}>See all</Text>
+        <Text
+          style={styles.seeAll}
+          onPress={() => setSeeAll((state) => !state)}>
+          {seeAll ? 'See less' : 'See all'}
+        </Text>
       </View>
       <FlatList
-        data={transactions.slice(0, 3)}
+        data={seeAll ? transactions : transactions.slice(0, 3)}
         renderItem={({ item }) => <ItemRow item={item} />}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={true}
       />
     </View>
   )
@@ -49,7 +71,8 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3
+    elevation: 3,
+    maxHeight: '55%',
   },
   header: {
     flexDirection: 'row',
@@ -72,7 +95,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingVertical: spacing.xs
+    paddingVertical: spacing.md
   },
   transactionName: {
     fontSize: 16,

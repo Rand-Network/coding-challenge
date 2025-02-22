@@ -18,7 +18,7 @@ export function parseTransaction (transaction: any): TTransaction {
       name: transaction.name,
       amount: Math.round(parseFloat(transaction.amount) * 100),
       isExpense: Boolean(transaction.isExpense),
-      id: transaction.id
+      id: +transaction.id
     }
   } catch (error) {
     throw new Error('Invalid transaction object.')

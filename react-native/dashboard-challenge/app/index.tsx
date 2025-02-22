@@ -1,5 +1,4 @@
-import { Link } from 'expo-router'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useQuery } from '@tanstack/react-query'
 import { getTransactions } from '@/src/api/TransactionApi'
@@ -49,10 +48,6 @@ export default function Home () {
           <ProductCarousel />
           <Balance />
           <TransactioList />
-          <Text>Recent transactions + see all + modal</Text>
-          <Link href="/modal">
-            Open modal
-          </Link>
         </View>
       </GestureHandlerRootView>
     </SafeAreaView>
@@ -65,24 +60,4 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: spacing.sm
   },
-  card: {
-    backgroundColor: colors.secondary,
-    borderRadius: 8,
-    padding: spacing.md,
-    marginVertical: spacing.sm,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%'
-  }
 })
