@@ -1,13 +1,24 @@
-import { memo, useState } from "react"
+import { memo, useCallback, useState } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { formatPrices, TTransaction } from "../models/Transaction"
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { FlatList, RefreshControl, RefreshControlComponent, StyleSheet, Text, View } from "react-native"
 import { colors, spacing } from "../styles/theme"
 import { router } from "expo-router"
+import { useProducts } from "../hooks/useProducts"
+import { useTransactions } from "../hooks/useTransactions"
 
 export default function TransactioList () {
   const { transactions } = useAppStore()
   const [seeAll, setSeeAll] = useState(false)
+  const { refetch: refetchProducts } = useProducts()
+  const { refetch: refetchTransactions } = useTransactions()
+
+  const [refreshing, setRefreshing] = useState(false)
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    Promise.all([refetchProducts(), refetchTransactions()])
+      .then(() => setRefreshing(false))
+  }, [])
 
   function navigate ({ id }: { id: TTransaction['id'] }) {
     router.push({
@@ -52,6 +63,7 @@ export default function TransactioList () {
         renderItem={({ item }) => <ItemRow item={item} />}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={true}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </View>
   )
