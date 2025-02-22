@@ -1,5 +1,5 @@
 import { Link } from 'expo-router'
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useQuery } from '@tanstack/react-query'
 import { getTransactions } from '@/src/api/TransactionApi'
@@ -12,6 +12,7 @@ import ProductCarousel from '@/src/components/carousel'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Balance from '@/src/components/balance'
 import TransactioList from '@/src/components/transaction-list'
+import { colors, spacing } from '@/src/styles/theme'
 
 export default function Home () {
 
@@ -43,32 +44,45 @@ export default function Home () {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GestureHandlerRootView>
-        <ScrollView>
+      <GestureHandlerRootView style={styles.container}>
+        <View>
           <ProductCarousel />
-          <Text style={styles.title}>Summary</Text>
           <Balance />
           <TransactioList />
           <Text>Recent transactions + see all + modal</Text>
-          <Link href="/modal" style={styles.link}>
+          <Link href="/modal">
             Open modal
           </Link>
-        </ScrollView>
+        </View>
       </GestureHandlerRootView>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 25
-  },
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 20
+    backgroundColor: colors.primary,
+    padding: spacing.sm
   },
-  link: {
-    paddingTop: 20,
-    fontSize: 20,
+  card: {
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    padding: spacing.md,
+    marginVertical: spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
+  }
 })

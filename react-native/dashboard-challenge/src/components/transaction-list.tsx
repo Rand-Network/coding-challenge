@@ -2,7 +2,7 @@ import { memo } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { formatPrices, TTransaction } from "../models/Transaction"
 import { FlatList, StyleSheet, Text, View } from "react-native"
-
+import { colors, spacing } from "../styles/theme"
 
 export default function TransactioList () {
 
@@ -10,21 +10,25 @@ export default function TransactioList () {
 
   const ItemRow = memo(function ItemRow ({ item }: { item: TTransaction }) {
     return (
-      <View style={Styles.row}>
-        <Text style={[Styles.content, Styles.cellLeft]}>{item.name}</Text>
-        <Text style={[, Styles.content, Styles.cellRight]}>{formatPrices(item)}</Text>
+      <View style={styles.item}>
+        <Text style={styles.transactionName}>{item.name}</Text>
+        <Text style={[
+          styles.amount,
+          item.isExpense ? styles.negative : styles.positive
+        ]}>
+          {formatPrices(item)}</Text>
       </View>
     )
   })
 
   return (
-    <View style={Styles.container}>
-      <View style={Styles.row}>
-        <Text style={[Styles.title, Styles.cellTitle]}>Recent transactions</Text>
-        <Text style={[Styles.title, Styles.cellRight]}>See all</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Recent transactions</Text>
+        <Text style={styles.seeAll}>See all</Text>
       </View>
       <FlatList
-        data={transactions}
+        data={transactions.slice(0, 3)}
         renderItem={({ item }) => <ItemRow item={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -32,41 +36,57 @@ export default function TransactioList () {
   )
 }
 
-const Styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    backgroundColor: 'lightblue',
-    paddingHorizontal: 10,
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    padding: spacing.md,
+    marginVertical: spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: spacing.md
   },
   title: {
     fontSize: 20,
+    fontWeight: '500'
   },
-  content: {
-    fontSize: 18,
+  seeAll: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: colors.accent
   },
-  row: {
-    flex: 1,
+  item: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 5
+    paddingVertical: spacing.xs
   },
-  cellTitle: {
-    flex: 2,
-    flexDirection: 'column',
-    textAlignVertical: 'center',
-    textAlign: 'left'
+  transactionName: {
+    fontSize: 16,
+    fontWeight: '400'
   },
-  cellLeft: {
-    flex: 1,
-    flexDirection: 'column',
-    textAlignVertical: 'center',
-    textAlign: 'left'
-  },
-  cellRight: {
-    flex: 1,
-    flexDirection: 'column',
-    textAlignVertical: 'center',
+  amount: {
+    fontSize: 16,
+    fontWeight: '400',
     textAlign: 'right'
   },
+  positive: {
+    color: colors.text.positive
+  },
+  negative: {
+    color: colors.text.negative
+  }
 })

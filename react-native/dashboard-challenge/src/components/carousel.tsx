@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Image, Dimensions, StyleSheet } from 'react-native'
 import Carousel from 'react-native-reanimated-carousel'
 import { useAppStore } from '../hooks/useAppStore'
+import { colors, spacing } from '@/src/styles/theme'
 
 const { width } = Dimensions.get('window')
 
@@ -10,17 +11,17 @@ export default function ProductCarousel () {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const renderItem = ({ item }: { item: { image: string } }) => (
-    <View>
+    <View style={styles.container}>
       <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
     </View>
   )
 
   return (
-    <View style={styles.container}>
+    <View style={styles.wrapper}>
       <Carousel
         data={products}
         renderItem={renderItem}
-        width={width}
+        width={width - (spacing.sm * 2)} // Match container width
         height={200}
         onProgressChange={(_, index) => setActiveIndex(index)} // Tracks the active index
         loop={false} // Disables infinite loop
@@ -34,30 +35,35 @@ export default function ProductCarousel () {
   )
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
+  wrapper: {
+    marginHorizontal: -spacing.sm, // Compensate for parent padding
+    marginBottom: spacing.md
+  },
   container: {
-    alignItems: 'center',
+    height: 200,
   },
   image: {
-    width: '100%',
+    width: width,
     height: '100%',
-    borderRadius: 10,
   },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    position: 'absolute',
+    bottom: spacing.sm,
+    width: '100%'
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 5,
-    backgroundColor: '#bbb',
-    marginHorizontal: 5,
-  },
-  activeDot: {
-    backgroundColor: '#333',
     width: 10,
     height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.text.secondary,
+    marginHorizontal: 4
   },
+  activeDot: {
+    backgroundColor: colors.accent,
+    width: 10,
+    height: 10
+  }
 })

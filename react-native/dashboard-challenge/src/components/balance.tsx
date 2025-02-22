@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { StyleSheet, Text, View } from "react-native"
+import { colors, spacing } from "../styles/theme"
 
 export default function Balance () {
   const { transactions, getBalance } = useAppStore() // Load products from Zustand
@@ -16,27 +17,37 @@ export default function Balance () {
   )
 
   return (
-    <View style={Styles.row}>
-      <Text style={Styles.cell}>Balance</Text>
-      <Text style={[Styles.cell, { textAlign: "right" }]}>{formatBalance}</Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>Balance</Text>
+      <Text style={styles.amount}>{formatBalance}</Text>
     </View>
   )
 }
 
-const Styles = StyleSheet.create({
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
-    paddingBlock: 25,
-    backgroundColor: 'lightblue'
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    padding: spacing.md,
+    marginVertical: spacing.md,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
-  cell: {
-    flex: 1,
-    flexDirection: 'column',
-    fontSize: 20,
-    textAlignVertical: 'center',
-    marginHorizontal: 10
+  label: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: colors.text.secondary
   },
+  amount: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: colors.text.primary,
+    textAlign: 'right'
+  }
 })
