@@ -47,14 +47,17 @@ export default function ProductCarousel () {
         renderItem={renderItem}
         width={width}
         height={height}
-        onProgressChange={(index) => setActiveIndex(index)} // Tracks the active index
+        onProgressChange={(_, index) => setActiveIndex(index)} // Tracks the active index
       />
       <View style={styles.pagination}>
-        {products.map((_, index) => (
-          <View
-            key={index}
-            style={[styles.dot, activeIndex === index && styles.activeDot]} />
-        ))}
+        {products.map((_, index) => {
+
+          return (
+            <View
+              key={index}
+              style={[styles.dot, activeIndex === index && styles.activeDot]} />
+          )
+        })}
       </View>
     </View>
   )
