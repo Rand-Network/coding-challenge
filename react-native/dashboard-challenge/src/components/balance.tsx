@@ -1,10 +1,31 @@
 import { useMemo } from "react"
 import { useAppStore } from "../hooks/useAppStore"
-import { StyleSheet, Text, View } from "react-native"
+import { Dimensions, StyleSheet, Text, View } from "react-native"
 import { colors, spacing } from "../styles/theme"
+import ContentLoader, { Rect } from "react-content-loader/native"
+import { useTransactions } from "../hooks/useTransactions"
+
+const { width } = Dimensions.get('window')
+const height = 83
+
+const Loader = () => (
+  <ContentLoader
+    style={styles.container}
+    animate={true}
+    width={width}
+    height={height}
+    viewBox={`5 5 ${width} ${height}`}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#bfbfbf"
+  >
+    <Rect x="4%" y="16" rx="5" ry="5" width={60} height={16} />
+    <Rect x="50%" y="40" rx="5" ry="5" width={145} height={24} />
+  </ContentLoader>
+)
 
 export default function Balance () {
-  const { transactions, getBalance } = useAppStore() // Load products from Zustand
+  const { transactions, getBalance } = useAppStore()
+  const { isFetching } = useTransactions()
 
   const formatBalance = useMemo(
     () =>
@@ -15,6 +36,10 @@ export default function Balance () {
     ,
     [transactions]
   )
+
+  if (isFetching) {
+    return <Loader />
+  }
 
   return (
     <View style={styles.container}>
