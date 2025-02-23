@@ -8,11 +8,9 @@ export const ApiRequester = axios.create({
 ApiRequester.interceptors.request.use(
   async axiosRequestConfig => {
     // Uncoment to delay the requests 3s
-    /*
-      await new Promise(resolve =>
-        setTimeout(resolve, Math.floor(Math.random() * 3000))
-      )
-    */
+    await new Promise(resolve =>
+      setTimeout(resolve, Math.floor(Math.random() * 5000))
+    )
     return axiosRequestConfig
   },
   error => Promise.reject(error)
