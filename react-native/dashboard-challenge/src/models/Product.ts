@@ -1,3 +1,5 @@
+import { getRedirectUrl } from "../api/ProductApi"
+
 export interface TProduct {
     image: string,
     id: string
@@ -8,10 +10,10 @@ export interface TProduct {
  * @param Product API Product
  * @returns TProduct
  */
-export function parseProduct (product: any): TProduct {
+export const parseProduct = async (product: any): Promise<TProduct> => {
     try {
         return {
-            image: product.image,
+            image: await getRedirectUrl(product.image),
             id: product.id
         }
     } catch (error) {

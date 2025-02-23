@@ -22,11 +22,10 @@ export const useAppStore = create<AppState>()(
       getTransactionById ({ id }) {
         return get().transactions.find((trans) => trans.id === id)
       },
-      setProducts: ({ products }) =>
-        set(() => {
-          const parsedProducts = products.map(parseProduct)
-          return { products: parsedProducts }
-        }),
+      setProducts: async ({ products }) => {
+        const parsedProducts = await Promise.all(products.map(parseProduct))
+        set({ products: parsedProducts })
+      },
       setTransactions: ({ transactions }) =>
         set(() => {
           const parsedTransactions = sortTransactions(transactions.map(parseTransaction))
