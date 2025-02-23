@@ -28,12 +28,10 @@ export default function Home () {
   // Store data after fetching
   useEffect(() => {
     if (productsIsError) {
-      console.log('Products error')
       setProducts({ products: [] })
       return
     }
     if (productsData?.data && Array.isArray(productsData.data)) {
-      console.log('updateProducts')
       setProducts({ products: productsData.data as unknown as TProduct[] })
     }
   }, [productsDataUpdatedAt, productsIsError])
@@ -44,7 +42,6 @@ export default function Home () {
       return
     }
     if (transactionsData?.data && Array.isArray(transactionsData.data)) {
-      console.log('Update trans')
       setTransactions({ transactions: transactionsData.data as unknown as TTransaction[] })
     }
   }, [transactionsData, transactionsIsError])
