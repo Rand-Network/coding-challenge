@@ -27,6 +27,10 @@ export default function ProductCarousel () {
   const { isFetching } = useProducts()
   const [activeIndex, setActiveIndex] = useState(0)
 
+  if (isFetching) {
+    return <Loader />
+  }
+
   const renderItem = ({ item }: { item: { image: string } }) => (
     <View style={styles.container}>
       <Image
@@ -35,10 +39,6 @@ export default function ProductCarousel () {
         style={styles.image} resizeMode="cover" />
     </View>
   )
-
-  if (isFetching) {
-    return <Loader />
-  }
 
   return (
     <View>

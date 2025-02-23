@@ -1,13 +1,36 @@
 import { memo, useState } from "react"
 import { useAppStore } from "../hooks/useAppStore"
 import { formatPrices, TTransaction } from "../models/Transaction"
-import { StyleSheet, Text, View } from "react-native"
+import { Dimensions, StyleSheet, Text, View } from "react-native"
 import { colors, spacing } from "../styles/theme"
 import { router } from "expo-router"
+import ContentLoader, { Rect } from "react-content-loader/native"
+import { useTransactions } from "../hooks/useTransactions"
+
+const { width } = Dimensions.get('window')
+const height = 200
+
+const Loader = () => (
+  <ContentLoader
+    animate={true}
+    width={width}
+    height={height}
+    viewBox={`5 5 ${width} ${height}`}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#bfbfbf"
+  >
+    <Rect x="0" y="0" rx="5" ry="5" width={width} height={height} />
+  </ContentLoader>
+)
 
 export default function TransactioList () {
   const { transactions } = useAppStore()
   const [seeAll, setSeeAll] = useState(false)
+  const { isFetching } = useTransactions()
+
+  if (isFetching) {
+    return <Loader />
+  }
 
   const displayedTransactions = seeAll ? transactions : transactions.slice(0, 3)
 
