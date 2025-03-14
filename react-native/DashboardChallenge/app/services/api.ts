@@ -1,14 +1,16 @@
 import { Transaction, Product } from '../types';
-import { MOCK_TRANSACTIONS, MOCK_PRODUCTS } from '../utils/mockData';
+import { axiosInstance } from './axios';
 
 export const api = {
   async getTransactions(): Promise<Transaction[]> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return MOCK_TRANSACTIONS;
+    return axiosInstance.get('/transactions');
   },
 
   async getProducts(): Promise<Product[]> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return MOCK_PRODUCTS;
+    return axiosInstance.get('/products');
+  },
+
+  async addTransaction(transaction: Omit<Transaction, 'id' | 'createdAt'>): Promise<Transaction> {
+    return axiosInstance.post('/transactions', transaction);
   }
 }; 
