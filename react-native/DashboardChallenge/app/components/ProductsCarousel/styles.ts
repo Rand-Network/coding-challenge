@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
   },
+  emptyContainer: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 20,
+  }
 });
 
 export default {}; 
