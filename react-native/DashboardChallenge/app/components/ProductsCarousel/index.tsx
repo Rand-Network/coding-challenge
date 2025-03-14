@@ -21,7 +21,7 @@ export default function ProductsCarousel() {
     );
   }
 
-  if (error || !products.length) {
+  if (!products.length) {
     return null;
   }
 
