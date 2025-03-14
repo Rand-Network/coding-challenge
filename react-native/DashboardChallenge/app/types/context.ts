@@ -6,12 +6,14 @@ export interface AppContextType {
   balance: number;
   transactionsLoading: boolean;
   productsLoading: boolean;
-  error: Error | null;
+  transactionsError: Error | null;
+  productsError: Error | null;
 
   setTransactions: (transactions: Transaction[]) => void;
   setProducts: (products: Product[]) => void;
   addTransaction: (transaction: Transaction) => void;
   setTransactionsLoading: (loading: boolean) => void;
   setProductsLoading: (loading: boolean) => void;
-  setError: (error: Error | null) => void;
+  setTransactionsError: (error: Error | null) => void;
+  setProductsError: (error: Error | null) => void;
 } 

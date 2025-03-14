@@ -10,7 +10,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [transactionsLoading, setTransactionsLoading] = useState(false);
   const [productsLoading, setProductsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [transactionsError, setTransactionsError] = useState<Error | null>(null);
+  const [productsError, setProductsError] = useState<Error | null>(null);
 
   useEffect(() => {
     console.log('Transactions updated:', transactions);
@@ -34,13 +35,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         balance,
         transactionsLoading,
         productsLoading,
-        error,
+        transactionsError,
+        productsError,
         setTransactions,
         setProducts,
         addTransaction,
         setTransactionsLoading,
         setProductsLoading,
-        setError,
+        setTransactionsError,
+        setProductsError,
       }}
     >
       {children}

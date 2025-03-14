@@ -7,13 +7,14 @@ import TransactionItem from '../TransactionItem';
 import TransactionModal from '../TransactionModal';
 import TransactionSkeleton from '../TransactionSkeleton';
 import { Transaction } from 'app/types';
+import EmptyState from '../EmptyState';
 
 interface Props {
   limit?: number;
 }
 
 export default function TransactionList({ limit }: Props) {
-  const { transactions, refetch, isLoading } = useTransactions();
+  const { transactions, refetch, isLoading, error } = useTransactions();
   const pathname = usePathname();
   const isDashboard = pathname.includes('dashboard');
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
@@ -26,7 +27,17 @@ export default function TransactionList({ limit }: Props) {
     ? transactions.slice(0, limit)
     : transactions;
 
-  return ( 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        {[...Array(limit || 5)].map((_, index) => (
+          <TransactionSkeleton key={index} />
+        ))}
+      </View>
+    );
+  }
+
+  return (
     <View style={styles.container}>
       {isDashboard && (
         <View style={styles.header}>
@@ -38,28 +49,30 @@ export default function TransactionList({ limit }: Props) {
           </Link>
         </View>
       )}
-      {isLoading ? (
-        [...Array(limit || 5)].map((_, index) => (
-          <TransactionSkeleton key={index} />
-        ))
-      ) : (
-        <FlatList
-          data={displayedTransactions}
-          renderItem={({ item }) => (
-            <TransactionItem 
-              transaction={item} 
-              onPress={setSelectedTransaction}
-            />
-          )}
-          keyExtractor={item => item.id}
-          refreshing={isLoading}
-          onRefresh={refetch}
-        />
-      )}
-
+      <FlatList
+        data={displayedTransactions}
+        renderItem={({ item }) => (
+          <TransactionItem 
+            transaction={item} 
+            onPress={() => setSelectedTransaction(item)} 
+          />
+        )}
+        keyExtractor={item => item.id}
+        refreshing={isLoading}
+        onRefresh={refetch}
+        ListEmptyComponent={
+          <EmptyState 
+            message={
+              error 
+                ? "Failed to load transactions. Pull to refresh."
+                : "No transactions found."
+            }
+          />
+        }
+      />
       <TransactionModal
         transaction={selectedTransaction}
-        visible={!!selectedTransaction}
+        visible={selectedTransaction !== null}
         onClose={() => setSelectedTransaction(null)}
       />
     </View>

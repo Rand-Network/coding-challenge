@@ -10,9 +10,9 @@ export function useTransactions() {
     setTransactions, 
     addTransaction, 
     transactionsLoading,
-    error,
+    transactionsError,
     setTransactionsLoading, 
-    setError 
+    setTransactionsError 
   } = useApp();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function useTransactions() {
   const fetchTransactions = useCallback(async () => {
     try {
       setTransactionsLoading(true);
-      setError(null);
+      setTransactionsError(null);
       
       const data = await api.getTransactions();
       setTransactions(data);
@@ -36,14 +36,14 @@ export function useTransactions() {
       if (cached.length) {
         console.log('Using cached data - Pull to refresh');
         setTransactions(cached);
-        setError(new Error('Using cached data - Pull to refresh'));
+        setTransactionsError(new Error('Using cached data - Pull to refresh'));
       } else {
-        setError(err instanceof Error ? err : new Error('Failed to fetch transactions'));
+        setTransactionsError(err instanceof Error ? err : new Error('Failed to fetch transactions'));
       }
     } finally {
       setTransactionsLoading(false);
     }
-  }, [setTransactions, setTransactionsLoading, setError]);
+  }, [setTransactions, setTransactionsLoading, setTransactionsError]);
 
   const addTransactionWithCache = useCallback(async (transaction: Omit<Transaction, 'id' | 'createdAt'>) => {
     try {
@@ -61,7 +61,7 @@ export function useTransactions() {
     transactions, 
     addTransaction: addTransactionWithCache,
     isLoading: transactionsLoading,
-    error,
+    error: transactionsError,
     refetch: fetchTransactions 
   };
 }

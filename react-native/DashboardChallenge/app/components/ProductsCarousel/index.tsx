@@ -3,6 +3,7 @@ import { View, Image, FlatList, Dimensions } from 'react-native';
 import { styles } from './styles';
 import { useProducts } from '../../hooks/useProducts';
 import ProductSkeleton from '../ProductSkeleton';
+import EmptyState from '../EmptyState';
 
 const { width } = Dimensions.get('window');
 
@@ -19,10 +20,6 @@ export default function ProductsCarousel() {
         <ProductSkeleton />
       </View>
     );
-  }
-
-  if (!products.length) {
-    return null;
   }
 
   return (
@@ -42,6 +39,17 @@ export default function ProductsCarousel() {
         keyExtractor={item => item.id}
         refreshing={isLoading}
         onRefresh={refetch}
+        ListEmptyComponent={
+          <View style={[styles.emptyContainer,{marginLeft: 40}]}>
+            <EmptyState 
+              message={
+                error 
+                  ? "Failed to load products. Pull to refresh."
+                  : "No products available."
+              }
+            />
+          </View>
+        }
       />
     </View>
   );
