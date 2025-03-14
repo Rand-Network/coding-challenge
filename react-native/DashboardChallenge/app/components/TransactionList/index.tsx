@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, FlatList } from 'react-native';
 import { Link, usePathname } from 'expo-router';
 import { styles } from './styles';
 import { useTransactions } from '../../hooks/useTransactions';
 import TransactionItem from '../TransactionItem';
+import TransactionModal from '../TransactionModal';
 import TransactionSkeleton from '../TransactionSkeleton';
+import { Transaction } from 'app/types';
 
 interface Props {
   limit?: number;
@@ -14,6 +16,7 @@ export default function TransactionList({ limit }: Props) {
   const { transactions, refetch, isLoading } = useTransactions();
   const pathname = usePathname();
   const isDashboard = pathname.includes('dashboard');
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     refetch();
@@ -42,12 +45,23 @@ export default function TransactionList({ limit }: Props) {
       ) : (
         <FlatList
           data={displayedTransactions}
-          renderItem={({ item }) => <TransactionItem transaction={item} />}
+          renderItem={({ item }) => (
+            <TransactionItem 
+              transaction={item} 
+              onPress={setSelectedTransaction}
+            />
+          )}
           keyExtractor={item => item.id}
           refreshing={isLoading}
           onRefresh={refetch}
         />
       )}
+
+      <TransactionModal
+        transaction={selectedTransaction}
+        visible={!!selectedTransaction}
+        onClose={() => setSelectedTransaction(null)}
+      />
     </View>
   );
 } 

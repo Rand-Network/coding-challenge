@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Transaction, Product } from '../types';
 import { AppContextType } from 'app/types/context';
 
@@ -12,7 +12,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [productsLoading, setProductsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  console.log(transactions);
+  useEffect(() => {
+    console.log('Transactions updated:', transactions);
+  }, [transactions]);
+
   const balance = transactions.reduce((acc, transaction) => {
     return transaction.isExpense 
       ? acc - parseFloat(transaction.amount) 
