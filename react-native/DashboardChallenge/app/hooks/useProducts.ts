@@ -3,25 +3,32 @@ import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 
 export function useProducts() {
-  const { products, setProducts, setIsLoading, setError } = useApp();
+  const { 
+    products, 
+    setProducts,
+    productsLoading,
+    error, 
+    setProductsLoading, 
+    setError 
+  } = useApp();
 
   const fetchProducts = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setProductsLoading(true);
       setError(null);
       const data = await api.getProducts();
       setProducts(data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch products'));
     } finally {
-      setIsLoading(false);
+      setProductsLoading(false);
     }
-  }, [setProducts, setIsLoading, setError]);
+  }, [setProducts, setProductsLoading, setError]);
 
   return { 
-    products, 
-    isLoading: false, 
-    error: null,
+    products,
+    isLoading: productsLoading,
+    error,
     refetch: fetchProducts 
   };
 } 

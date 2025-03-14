@@ -8,7 +8,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   console.log(transactions);
@@ -28,12 +29,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         transactions,
         products,
         balance,
-        isLoading,
+        transactionsLoading,
+        productsLoading,
         error,
         setTransactions,
         setProducts,
         addTransaction,
-        setIsLoading,
+        setTransactionsLoading,
+        setProductsLoading,
         setError,
       }}
     >

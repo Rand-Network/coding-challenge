@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, FlatList, Dimensions } from 'react-native';
 import { styles } from './styles';
 import { useProducts } from '../../hooks/useProducts';
+import ProductSkeleton from '../ProductSkeleton';
 
 const { width } = Dimensions.get('window');
 
@@ -12,7 +13,15 @@ export default function ProductsCarousel() {
     refetch();
   }, [refetch]);
 
-  if (isLoading || error || !products.length) {
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ProductSkeleton />
+      </View>
+    );
+  }
+
+  if (error || !products.length) {
     return null;
   }
 
