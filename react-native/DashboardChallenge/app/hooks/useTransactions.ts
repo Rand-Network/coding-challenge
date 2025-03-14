@@ -7,28 +7,30 @@ export function useTransactions() {
     transactions, 
     setTransactions, 
     addTransaction, 
-    setIsLoading, 
+    transactionsLoading,
+    error,
+    setTransactionsLoading, 
     setError 
   } = useApp();
 
   const fetchTransactions = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setTransactionsLoading(true);
       setError(null);
       const data = await api.getTransactions();
       setTransactions(data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch transactions'));
     } finally {
-      setIsLoading(false);
+      setTransactionsLoading(false);
     }
-  }, [setTransactions, setIsLoading, setError]);
+  }, [setTransactions, setTransactionsLoading, setError]);
 
   return { 
     transactions, 
     addTransaction,
-    isLoading: false, 
-    error: null,
+    isLoading: transactionsLoading,
+    error,
     refetch: fetchTransactions 
   };
 }

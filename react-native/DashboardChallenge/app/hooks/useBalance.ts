@@ -1,6 +1,6 @@
 import { useApp } from '../context/AppContext';
 
 export function useBalance() {
-  const { balance, isLoading, error } = useApp();
-  return { balance, isLoading, error };
+  const { balance, transactionsLoading, error } = useApp();
+  return { balance, isLoading: transactionsLoading, error };
 }

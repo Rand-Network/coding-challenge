@@ -4,6 +4,7 @@ import { Link, usePathname } from 'expo-router';
 import { styles } from './styles';
 import { useTransactions } from '../../hooks/useTransactions';
 import TransactionItem from '../TransactionItem';
+import TransactionSkeleton from '../TransactionSkeleton';
 
 interface Props {
   limit?: number;
@@ -34,13 +35,19 @@ export default function TransactionList({ limit }: Props) {
           </Link>
         </View>
       )}
-      <FlatList
-        data={displayedTransactions}
-        renderItem={({ item }) => <TransactionItem transaction={item} />}
-        keyExtractor={item => item.id}
-        refreshing={isLoading}
-        onRefresh={refetch}
-      />
+      {isLoading ? (
+        [...Array(limit || 5)].map((_, index) => (
+          <TransactionSkeleton key={index} />
+        ))
+      ) : (
+        <FlatList
+          data={displayedTransactions}
+          renderItem={({ item }) => <TransactionItem transaction={item} />}
+          keyExtractor={item => item.id}
+          refreshing={isLoading}
+          onRefresh={refetch}
+        />
+      )}
     </View>
   );
 } 
